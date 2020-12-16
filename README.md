@@ -59,7 +59,7 @@
 </project>
 ```
 
-## config的xml文件头
+## 主配置config的xml文件头
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration
