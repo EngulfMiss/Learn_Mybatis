@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Engulf.dao.IUserDao"> <!-- 确定该方法在哪个接口中 -->
+
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="com.Engulf.domain.User">
+        <include refid="defaultSQL"></include>
+    </select>  <!-- id确定是哪个方法，resultType确定封装成那个实体类 -->
+
+
+    <!-- _________________________________________________________  -->
+
+
+    <!-- 配置 查询结果的列名和实体类的属性名的对应关系 -->
+    <resultMap id="userMap" type="com.Engulf.domain.User2">
+        <!-- 主键字段的对应 -->
+        <id property="userId" column="id"></id><!-- property实体类的字段名称  column数据库字段名 -->
+
+        <!-- 非主键字段的对应 -->
+        <result property="userName" column="username"></result>
+        <result property="userSex" column="sex"></result>
+        <result property="userAddress" column="address"></result>
+        <result property="userBirthday" column="birthday"></result>
+    </resultMap>  <!-- id是一个唯一标志名称随意 type对应的实体类-->
+
+
+
+    <!-- 抽取重复的标签 -->
+    <sql id="defaultSQL">
+        select * from user
+    </sql>
+
+
+
+    <!-- 查询所有 (实体类和数据库的属性名称不一致) -->
+    <select id="findAll2" resultMap="userMap">
+        <!--select id as userId,username as userName,address as userAddress,sex as userSex,birthday as userBirthday from user;-->
+        select * from user;
+    </select>  <!-- id确定是哪个方法，resultType确定封装成那个实体类 -->
+
+
+    <!-- 根据名称查询用户 -->
+    <!--
+        只有当数据库表中的字段名称与实体类中的属性名称完全相同，才能直接使用resultType返回类型，后面跟上该实体类的名称。
+        否则一定需要用resultMap进行属性映射，否则得到的数据一直没有匹配的实体类与之对应，返回的结果也自然为空！！！
+    -->
+    <select id="findByName" parameterType="java.lang.String" resultType="com.Engulf.domain.User">
+        select * from user where username = #{kindred}
+    </select>
+
+
+    <!-- 根据名称模糊查询 -->
+    <select id="findByVagueName" parameterType="java.lang.String" resultType="com.Engulf.domain.User">
+        <!--             方式一                            -->
+        select * from user where username like #{Neeko}
+        <!--             方式二                            -->
+        <!--select * from user where username like '%${value}%'-->
+</select>
+
+
+    <!-- 根据QueryVo的条件查询用户 -->
+    <select id="findUserByVo" parameterType="com.Engulf.domain.QueryVo" resultType="com.Engulf.domain.User">
+        select * from user where username like #{user.username}
+    </select>
+
+
+    <!-- 根据条件查询 -->
+    <select id="findUserByCondition" resultType="com.Engulf.domain.User" parameterType="com.Engulf.domain.User">
+     <!-- #{username} 里面的username是实体类的属性
+        select * from user where 1=1
+        <if test="username!=null">   此处username为实体类的属性，区分大小写;SQL语句上的属性名不区分大小写
+            and username = #{username}
+        </if>
+        <if test="sex != null">
+            and sex = #{sex}
+        </if>
+    </select>
+    -->
+
+        select * from user
+        <where>
+            <if test="username!=null">
+                and username = #{username}
+            </if>
+            <if test="sex != null">
+                and sex = #{sex}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 根据QueryVo中的id集合查询User用户 -->
+    <select id="findUserInIds" resultType="com.Engulf.domain.User" parameterType="com.Engulf.domain.QueryVo">
+        <include refid="defaultSQL"></include>
+        <where>
+            <!-- There is no getter for property named 'ids' in 'class com.Engulf.domain.QueryVo -->
+            <!--<if test="ids != null and ids.size() > 0">-->
+            <if test="nums != null and nums.size() > 0">
+                <!-- collection的集合名称要与实体类中集合的属性名称相同 -->
+                <foreach collection="nums" open="and id in (" close=")" item="uid" separator=",">
+                    #{uid}
+                </foreach>
+            </if>
+        </where>
+
+    </select>
+
+
+</mapper>
