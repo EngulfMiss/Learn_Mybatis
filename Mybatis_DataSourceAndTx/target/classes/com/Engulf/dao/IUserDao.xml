@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Engulf.dao.IUserDao"> <!-- 确定该方法在哪个接口中 -->
+    <!-- 查询所有 -->
+    <select id="findAll" resultType="USER">
+        select * from user;
+    </select>  <!-- id确定是哪个方法，resultType确定封装成那个实体类 -->
+
+
+
+
+    <!-- 保存用户 -->
+    <insert id="saveUser" parameterType="com.Engulf.domain.User"> <!-- parameterType属性告知参数的类型 -->
+        <!-- 配置插入操作后，获取插入数据的id
+            keyPoperty:对应实体类的id属性
+            keyColumn:对应数据表的id属性
+        -->
+        <selectKey keyProperty="id" keyColumn="id" resultType="java.lang.Integer" order="AFTER">
+            select last_insert_id();
+        </selectKey>
+        <!-- 参数为#{对应实体类的set，get方法的属性} -->
+        insert into user(username,address,sex,birthday) values(#{username},#{address},#{sex},#{birthday});
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="updateUser" parameterType="com.Engulf.domain.User">
+        update user set username=#{username},address=#{address},sex=#{sex},birthday=#{birthday} where id=#{id}
+    </update>
+
+    <!-- 删除用户 -->
+    <delete id="deleteUser" parameterType="java.lang.Integer"> <!--参数是普通类型且只有一个参数，#{随便写}-->
+        delete from user where id=#{Gnardada}
+    </delete>
+
+    <!-- 根据名称查询用户 -->
+    <!--
+        只有当数据库表中的字段名称与实体类中的属性名称完全相同，才能直接使用resultType返回类型，后面跟上该实体类的名称。
+        否则一定需要用resultMap进行属性映射，否则得到的数据一直没有匹配的实体类与之对应，返回的结果也自然为空！！！
+    -->
+    <select id="findByName" parameterType="java.lang.String" resultType="com.Engulf.domain.User">
+        select * from user where username = #{kindred}
+    </select>
+
+
+    <!-- 根据名称模糊查询 -->
+    <select id="findByVagueName" parameterType="java.lang.String" resultType="user">
+        <!--             方式一                            -->
+        select * from user where username like #{Neeko}
+        <!--             方式二                            -->
+        <!--select * from user where username like '%${value}%'-->
+</select>
+
+    <!-- 获取用户的总记录条数 -->
+    <select id="findTotal" resultType="java.lang.Integer">
+        select count(id) from user;
+    </select>
+
+
+
+</mapper>
