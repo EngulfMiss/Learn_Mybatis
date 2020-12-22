@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Engulf.dao.IAccountDao"> <!-- 确定该方法在哪个接口中 -->
+
+
+    <!-- 定义封装account和user的resultMap -->
+    <resultMap id="accountUserMap" type="account">
+        <id property="id" column="aid"></id>
+        <result property="uid" column="uid"></result>
+        <result property="money" column="money"></result>
+        <!-- 一对一的关系映射，配置封装user的内容 -->
+        <association property="user" column="uid" javaType="user"><!-- 第二个(javaType)user用的别名 -->
+            <id property="id" column="id"></id>
+            <result property="username" column="username"></result>
+            <result property="address" column="address"></result>
+            <result property="sex" column="sex"></result>
+            <result property="birthday" column="birthday"></result>
+        </association>
+    </resultMap>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultMap="accountUserMap">
+        SELECT u.*,a.id AS aid,a.uid,a.money FROM account a,USER u WHERE u.id = a.uid;
+    </select>  <!-- id确定是哪个方法，resultType确定封装成那个实体类 -->
+
+
+    <!-- 查询所有，同时包含用户名和地址信息 -->
+    <select id="findAllAccount" resultType="accountuser">
+        SELECT a.*,u.username,u.address FROM account a,USER u WHERE u.id = a.uid;
+    </select>
+
+</mapper>
