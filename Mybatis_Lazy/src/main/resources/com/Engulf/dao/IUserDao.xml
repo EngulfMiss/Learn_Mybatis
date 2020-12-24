@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.Engulf.dao.IUserDao"> <!-- 确定该方法在哪个接口中 -->
+
+    <resultMap id="UserAccountMap" type="user">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="address" column="address"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+
+        <!-- 配置user对象中accounts集合的映射 -->
+        <collection property="accounts" ofType="account" select="com.Engulf.dao.IAccountDao.findAccountByUid" column="id"><!-- ofType集合中元素的类型 column是因为用用户表的id查-->
+
+        </collection>
+    </resultMap>
+
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultMap="UserAccountMap">
+        select * from user
+    </select>  <!-- id确定是哪个方法，resultType确定封装成那个实体类 -->
+
+    <!-- 根据名称查询用户 -->
+    <!--
+        只有当数据库表中的字段名称与实体类中的属性名称完全相同，才能直接使用resultType返回类型，后面跟上该实体类的名称。
+        否则一定需要用resultMap进行属性映射，否则得到的数据一直没有匹配的实体类与之对应，返回的结果也自然为空！！！
+    -->
+    <select id="findByName" parameterType="java.lang.String" resultType="User">
+        select * from user where username = #{kindred}
+    </select>
+
+    <select id="findById" parameterType="int" resultType="User">
+        select * from user where id = #{Gnar}
+    </select>
+
+</mapper>
