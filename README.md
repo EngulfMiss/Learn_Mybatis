@@ -97,7 +97,7 @@ log4j.appender.LOGFILE.layout=org.apache.log4j.PatternLayout
 log4j.appender.LOGFILE.layout.ConversionPattern=%d{ISO8601} %-6r [%15.15t] %-5p %30.30c %x - %m\n
 ```
 
-##log4j.properties 带DEBUG
+## log4j.properties 带DEBUG
 ```
 # Set root category priority to INFO and its only appender to CONSOLE.
 #log4j.rootCategory=INFO,CONSOLE
