@@ -118,3 +118,23 @@ log4j.appender.LOGFILE.Appender=true
 log4j.appender.LOGFILE.layout=org.apache.log4j.PatternLayout
 log4j.appender.LOGFILE.layout.ConversionPattern=%d{ISO8601} %-6r [%15.15t] %-5p %30.30c %x - %m\n
 ```
+
+## 连接数据库url属性出错
+```java
+Error querying database. Cause: com.mysql.jdbc.exceptions.jdbc4.CommunicationsException: Communications link failure
+
+<!-- 目前找到的一个可行的 -->
+<property name="url" value="jdbc:mysql://localhost:3306/test?useUnicode=true&amp;characterEncoding=utf-8&amp;serverTimezone=GMT"/>
+```
+
+## Mybatis资源文件编码导致的文件读取问题
+```java
+Cause: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException: 1 字节的 UTF-8 序列的字节 1 无效
+``` 
+解决方案:  
+在pom.xml文件中配置
+```xml
+<properties>
+  <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+</properties>
+```
