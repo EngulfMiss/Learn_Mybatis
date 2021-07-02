@@ -7,6 +7,18 @@
 
 在使用连接查询时，如果在你连接查询的sql语句中为字段起了别名，那么在resultMap中的colunm属性就应该映射的是别名的名称；但是，sql语句中的条件字段还是应该使用 数据库.字段名的形式
 
+javaType和ofType
+- javaType：用来指定实体类中属性的类型
+- ofType：用来指定映射到List或其他集合中的类型，差不多就是泛型类型的约束
+
+例如：Teacher对象中有student对象
+```java
+    public class Teacher{
+    //  List就是javaType 而 List中的Student就是ofType
+        private List<Student> students;
+    }
+```
+
 # 对一的情况
 
 ## 按照嵌套查询处理(子查询)
