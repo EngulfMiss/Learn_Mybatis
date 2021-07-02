@@ -69,3 +69,20 @@
     </collection>
 </resultMap>
 ```
+
+## 按照嵌套查询处理(子查询)
+```xml
+<resultMap id="MasterZ" type="com.engulf.pojo.Master">
+    <id property="id" column="id"></id>
+    <result property="name" column="name"></result>
+    <collection property="champions" column="id" ofType="com.engulf.pojo.Champion" select="findMyChampion"></collection>
+</resultMap>
+
+<select id="selectMaster2" parameterType="int" resultMap="MasterZ">
+    select * from my_master where id = #{masterId};
+</select>
+
+<select id="findMyChampion" resultType="com.engulf.pojo.Champion">
+    select * from champion;
+</select>
+```
