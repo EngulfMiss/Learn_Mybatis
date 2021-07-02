@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.engulf.dao.MasterMapper">
+
+    <!-- 连接查询方式 -->
+    <select id="selectMaster" parameterType="int" resultMap="MasterC">
+        select m.id masterId,m.name mname,c.id cid,c.name cname from my_master m left outer join champion c on m.id = c.mid where mid = #{masterId};
+    </select>
+
+    <resultMap id="MasterC" type="com.engulf.pojo.Master">
+        <id property="id" column="masterId"></id>
+        <result property="name" column="mname"></result>
+        <!--
+            javaType="" 指定属性的类型
+            集合的泛型信息，我们使用ofType获取
+        -->
+        <collection property="champions" ofType="com.engulf.pojo.Champion">
+            <id property="id" column="cid"></id>
+            <result property="name" column="cname"></result>
+            <result property="mid" column="masterId"></result>
+        </collection>
+    </resultMap>
+
+    <!-- 子查询方式 -->
+    <resultMap id="MasterZ" type="com.engulf.pojo.Master">
+        <id property="id" column="id"></id>
+        <result property="name" column="name"></result>
+        <collection property="champions" column="id" ofType="com.engulf.pojo.Champion" select="findMyChampion" javaType="ArrayList"></collection>
+    </resultMap>
+
+    <select id="selectMaster2" parameterType="int" resultMap="MasterZ">
+        select * from my_master where id = #{masterId};
+    </select>
+
+    <select id="findMyChampion" resultType="com.engulf.pojo.Champion">
+        select * from champion where mid = #{id};
+    </select>
+</mapper>
