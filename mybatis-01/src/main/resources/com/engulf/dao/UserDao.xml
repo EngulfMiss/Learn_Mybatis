@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 要和实现接口位置一样 -->
+<mapper namespace="com.engulf.dao.UserDao">
+    <select id="selectChampions" resultType="com.engulf.pojo.Champion">
+        select * from student
+    </select>
+    
+    <select id="selectById" parameterType="int" resultType="com.engulf.pojo.Champion">
+        select * from student where id = #{id}
+    </select>
+
+    <insert id="addChampion" parameterType="com.engulf.pojo.Champion">
+        insert into test.student(id,name,local_id) values (#{id},#{name},#{local_id})
+    </insert>
+
+    <update id="updateChampion" parameterType="com.engulf.pojo.Champion">
+        update test.student set name = #{name},local_id = #{local_id} where id = #{id}
+    </update>
+
+    <select id="selectLike" parameterType="java.lang.String" resultType="com.engulf.pojo.Champion">
+        select * from student where name like #{value}
+    </select>
+</mapper>
