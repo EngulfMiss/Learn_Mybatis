@@ -98,3 +98,13 @@ javaType和ofType
     select * from champion where mid = #{id};
 </select>
 ```
+
+# 动态SQL
+
+动态SQL元素和JSTL或基于类似XML的文本处理器相似。
+
+if
+choose(when,otherwise)
+trim
+foreach
+
