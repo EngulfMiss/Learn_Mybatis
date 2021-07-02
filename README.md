@@ -190,3 +190,18 @@ Cause: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException
 </resources>
 </build>
 ```
+
+## Mybatis注解实现resultMap
+```java
+public interface UserMapper {
+    @Results(id = "RM",value = {
+            @Result(id = true,column = "id",property = "id"),
+            @Result(column = "name",property = "name"),
+            @Result(column = "local_id",property = "localNum")
+    })
+
+    @Select("select * from student")
+    @ResultMap("RM")
+    public abstract List<Champion> getChampions();
+}
+```
