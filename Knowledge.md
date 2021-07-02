@@ -3,6 +3,12 @@
 - 对于学生而言， 多个学生**关联**一个老师 【多对一】 （关联，association）
 - 对于老师而言，一个老师有很多学生 【一对多】 (集合，collection)
 
+# 注意
+
+在使用连接查询时，如果在你连接查询的sql语句中为字段起了别名，那么在resultMap中的colunm属性就应该映射的是别名的名称；但是，sql语句中的条件字段还是应该使用 数据库.字段名的形式
+
+# 对一的情况
+
 ## 按照嵌套查询处理(子查询)
 ```xml
 <resultMap id="MC" type="com.engulf.pojo.MyChampion">
@@ -39,4 +45,27 @@
 <select id="selectMyChampion2" resultMap="MCC">
     select c.id cid,c.name cname,m.name mname from champion c,my_master m where c.mid = m.id;
 </select>
+```
+
+# 对多的情况
+
+## 按照查询结果处理(连接查询)
+```xml
+<select id="selectMaster" parameterType="int" resultMap="MasterC">
+    select m.id masterId,m.name mname,c.id cid,c.name cname from my_master m left outer join champion c on m.id = c.mid where mid = #{masterId};
+</select>
+
+<resultMap id="MasterC" type="com.engulf.pojo.Master">
+    <id property="id" column="masterId"></id>
+    <result property="name" column="mname"></result>
+    <!--
+        javaType="" 指定属性的类型
+        集合的泛型信息，我们使用ofType获取
+    -->
+    <collection property="champions" ofType="com.engulf.pojo.Champion">
+        <id property="id" column="cid"></id>
+        <result property="name" column="cname"></result>
+        <result property="mid" column="masterId"></result>
+    </collection>
+</resultMap>
 ```
