@@ -194,14 +194,15 @@ Cause: com.sun.org.apache.xerces.internal.impl.io.MalformedByteSequenceException
 ## Mybatis注解实现resultMap
 ```java
 public interface UserMapper {
+    //@Results最基础的使用方式(不考虑一对多，多对一等等)
+    @Select("select * from student")
     @Results(id = "RM",value = {
             @Result(id = true,column = "id",property = "id"),
             @Result(column = "name",property = "name"),
             @Result(column = "local_id",property = "localNum")
     })
-
-    @Select("select * from student")
-    @ResultMap("RM")
+    //后续其他可以通过@ResultMap("idName")来重复使用，但必须先用一次好像才能使用@ResultMap
+    //否则好像会报错
     public abstract List<Champion> getChampions();
 }
 ```
