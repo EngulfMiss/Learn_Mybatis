@@ -83,6 +83,6 @@
 </select>
 
 <select id="findMyChampion" resultType="com.engulf.pojo.Champion">
-    select * from champion;
+    select * from champion where mid = #{id};
 </select>
 ```
