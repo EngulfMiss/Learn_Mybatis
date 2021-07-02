@@ -3,7 +3,7 @@
 - 对于学生而言， 多个学生**关联**一个老师 【多对一】 （关联，association）
 - 对于老师而言，一个老师有很多学生 【一对多】 (集合，collection)
 
-## 按照嵌套查询处理
+## 按照嵌套查询处理(子查询)
 ```xml
 <resultMap id="MC" type="com.engulf.pojo.MyChampion">
     <id property="id" column="id"></id>
@@ -23,5 +23,20 @@
 
 <select id="selectMaster" resultType="com.engulf.pojo.Master">
     select * from my_master where id = #{mid}
+</select>
+```
+
+## 按照查询结果处理(连接查询)
+```xml
+<resultMap id="MCC" type="com.engulf.pojo.MyChampion">
+    <id property="id" column="cid"></id>
+    <result property="name" column="cname"></result>
+    <association property="master" javaType="com.engulf.pojo.Master">
+        <!-- 对内部对象进行映射配置 -->
+        <result property="name" column="mname"></result>
+    </association>
+</resultMap>
+<select id="selectMyChampion2" resultMap="MCC">
+    select c.id cid,c.name cname,m.name mname from champion c,my_master m where c.mid = m.id;
 </select>
 ```
