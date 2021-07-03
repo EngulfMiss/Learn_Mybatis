@@ -174,7 +174,7 @@ ___
 ```
 
 ### choose(when,otherwise)
-    **有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。**
+**有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。**
 ```xml
 <select id="findActiveBlogLike"
  resultType="Blog">
@@ -190,5 +190,29 @@ ___
       AND featured = 1
     </otherwise>
     </choose>
+</select>
+```
+
+### sql片段
+**使用sql标签提取公共的sql语句进行复用，使用时用include标签refid属性找到对应的sql id**
+
+**注意事项**
+- 最好基于单表来定义SQL片段
+- 不要存在where标签
+
+```xml
+<sql id="baseSql">
+    select * from blog
+</sql>
+<select id="selectBlogIf" parameterType="map" resultType="com.engulf.pojo.Blog">
+    <include refid="baseSql"></include>
+    <where>
+        <if test="title != null">
+            title = #{title}
+        </if>
+        <if test="author != null">
+            and author = #{author}
+        </if>
+    </where>
 </select>
 ```
