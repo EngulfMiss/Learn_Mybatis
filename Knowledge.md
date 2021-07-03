@@ -123,7 +123,20 @@ javaType和ofType
 
 ### trim、where、set
 
-***trim***
+**trim**
+___
+```xml
+<trim prefix="(" prefixOverrides="OR" suffixOverrides="," suffix=")">子句</trim>
+```
+
+　　这里的子句会对其进行trim()处理，忽略掉换行、空格等字符，所以本文中的子句都是指trim()处理后的字符串。如果子句为空，那么整个<trim>块不起作用，相当于不存在。本<trim>块的作用就是：去掉子句首的OR和子句尾的逗号，并在子句前后分别加上(和)，比如，"orabc,"-->"(abc)"。
+
+- prefixOverrides：子句首的命中词列表，以|分隔，忽略大小写。如果命中（轮询命中词，最多只命中一次），会删除子句首命中的词；没命中就算了。
+- prefix：删除子句句首后，在子句最前边加上单个空格+prefix。
+- suffixOverrides：子句尾的命中词列表，以|分隔，忽略大小写。如果命中（轮询命中词，最多只命中一次），会删除子句尾命中的词；没命中就算了。
+- suffix：删除子句句尾后，在子句最后边加上单个空格+suffix。
+    
+___
 
 **where 元素只会在子元素返回任何内容的情况下才插入 “WHERE” 子句。而且，若子句的开头为 “AND” 或 “OR”，where 元素也会将它们去除。**
 
