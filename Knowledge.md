@@ -216,3 +216,41 @@ ___
     </where>
 </select>
 ```
+
+### foreach
+- **动态 SQL 的另一个常见使用场景是对集合进行遍历（尤其是在构建 IN 条件语句的时候）。**  
+- **foreach 元素的功能非常强大，它允许你指定一个集合，声明可以在元素体内使用的集合项（item）和索引（index）变量。它也允许你指定开头与结尾的字符串以及集合项迭代之间的分隔符。这个元素也不会错误地添加多余的分隔符**  
+- **你可以将任何可迭代对象（如 List、Set 等）、Map 对象或者数组对象作为集合参数传递给 foreach。当使用可迭代对象或者数组时，index 是当前迭代的序号，item 的值是本次迭代获取到的元素。当使用 Map 对象（或者 Map.Entry 对象的集合）时，index 是键，item 是值。**
+```xml
+<!-- 
+collection:遍历的
+index:下标
+item:遍历出来的每一项
+open:开头
+close:结尾
+separator:分隔符
+-->
+<select id="selectPostIn" resultType="domain.blog.Post">
+  SELECT *
+  FROM POST P
+  WHERE ID in
+  <foreach item="it" index="index" collection="list"
+      open="(" separator="," close=")">
+        #{it}
+  </foreach>
+</select>
+    
+<select id="selectBlogForeach" parameterType="map" resultType="com.engulf.pojo.Blog">
+    select * from blog
+    <where>
+        <!--
+            注意：想要where标签帮助消除and open属性中的 and (  要有空格
+            否则 Preparing: select * from blog WHERE and( author = ? or author = ? )
+         -->
+        <foreach collection="Authors" item="author" open="and (" close=")" separator="or">
+             author = #{author}
+        </foreach>
+    </where>
+</select>
+```
+
