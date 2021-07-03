@@ -173,6 +173,22 @@ ___
 </update>
 ```
 
-    
-    
-    
+### choose(when,otherwise)
+    **有时候，我们不想使用所有的条件，而只是想从多个条件中选择一个使用。针对这种情况，MyBatis 提供了 choose 元素，它有点像 Java 中的 switch 语句。**
+```xml
+<select id="findActiveBlogLike"
+ resultType="Blog">
+    SELECT * FROM BLOG WHERE state = ‘ACTIVE’
+    <choose>
+    <when test="title != null">
+      AND title like #{title}
+    </when>
+    <when test="author != null and author.name != null">
+      AND author_name like #{author.name}
+    </when>
+    <otherwise>
+      AND featured = 1
+    </otherwise>
+    </choose>
+</select>
+```
