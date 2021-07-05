@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace 要和实现接口位置一样 -->
+<mapper namespace="com.engulf.dao.BlogMapper">
+
+    <sql id="baseSql">
+        select * from blog
+    </sql>
+
+    <insert id="addBlog" parameterType="com.engulf.pojo.Blog">
+        insert into test.blog(id,title,author,create_time,views)
+        values (#{id},#{title},#{author},#{createTime},#{views});
+    </insert>
+
+    <!-- if
+        test：进行条件判断 判断成功拼接标签内的内容
+     -->
+    <select id="selectBlogIf" parameterType="map" resultType="com.engulf.pojo.Blog">
+        <include refid="baseSql"></include>
+        <where>
+            <if test="title != null">
+                title = #{title}
+            </if>
+            <if test="author != null">
+                and author = #{author}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- choose -->
+    <select id="selectBlogChoose" resultType="com.engulf.pojo.Blog" parameterType="map">
+        <include refid="baseSql"></include>
+        <where>
+            <choose>
+                <when test="title != null">
+                    title = #{title}
+                </when>
+                <when test="author != null">
+                    and author = #{author}
+                </when>
+                <otherwise>
+                    and views = #{views}
+                </otherwise>
+            </choose>
+        </where>
+    </select>
+
+    <!-- set -->
+    <update id="updateBlog" parameterType="com.engulf.pojo.Blog">
+        update blog
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="author != null">
+                author = #{author},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- foreach -->
+    <select id="selectBlogForeach" parameterType="map" resultType="com.engulf.pojo.Blog">
+        select * from blog
+        <!--<where>
+                author
+            <foreach collection="Authors" item="author" open=" in (" close=")" separator=",">
+                #{author}
+            </foreach>
+        </where>-->
+        <where>
+            <!--
+                注意：想要where标签帮助消除and open属性中的 and (  要有空格
+                否则 Preparing: select * from blog WHERE and( author = ? or author = ? )
+             -->
+            <foreach collection="Authors" item="author" open="and (" close=")" separator="or">
+                 author = #{author}
+            </foreach>
+        </where>
+    </select>
+</mapper>
